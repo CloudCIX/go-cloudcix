@@ -26,13 +26,14 @@ func (cixClient CloudCIXClient) GetToken() (string, error) {
 	}
 
 	data, err := ioutil.ReadAll(response.Body)
+	defer response.Body.Close()
 	if err != nil {
 		return "", err
 	}
 
-	var HTTPresponse map[string]string
-	err = json.Unmarshal(data, &HTTPresponse)
-	return HTTPresponse["token"], err
+	var resp map[string]string
+	err = json.Unmarshal(data, &resp)
+	return resp["token"], err
 }
 
 func (cixClient CloudCIXClient) ReadData(application string, service string, object_id string, token string) (string, error) {
@@ -50,6 +51,7 @@ func (cixClient CloudCIXClient) ReadData(application string, service string, obj
 	}
 
 	data, err := ioutil.ReadAll(response.Body)
+	defer response.Body.Close()
 	if err != nil {
 		return "", err
 	}
@@ -74,6 +76,7 @@ func (cixClient CloudCIXClient) WriteData(application string, service string, ob
 	}
 
 	body, err := ioutil.ReadAll(response.Body)
+	defer response.Body.Close()
 	if err != nil {
 		return "", err
 	}
